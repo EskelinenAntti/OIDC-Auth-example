@@ -26,7 +26,6 @@ namespace AuthService
             Configuration = configuration;
         }
 
-
         public IConfiguration Configuration { get; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
@@ -43,51 +42,8 @@ namespace AuthService
 
             services.AddIdentityServer()
                 .AddDeveloperSigningCredential()
-                .AddInMemoryClients(new List<Client>() {
-                    new Client
-                        {
-                            ClientId = "spa",
-                            ClientName = "Demo React Client",
-                            Enabled = true,
-                            AllowedGrantTypes = GrantTypes.Code,
-                            RequirePkce = true,
-                            RequireClientSecret = false,
-                            RedirectUris =
-                            {
-                                "https://localhost:5001/auth/loginCallback",
-                            },
-                            AllowedCorsOrigins =     { "https://localhost:5001" },
-                            AccessTokenLifetime = 20,
-                            AllowedScopes =
-                            {
-                                IdentityServerConstants.StandardScopes.OpenId,
-                                IdentityServerConstants.StandardScopes.Profile,
-                                "api",
-                            }
-                        }
-                    }
-                )
-                /*.AddInMemoryIdentityResources(
-                    new List<IdentityResource>
-                    {
-                        new IdentityResources.OpenId(),
-                        new IdentityResources.Profile(),
-                        new IdentityResource("roles", new[] { "role" })
-                    }
-                )*/
-                /*.AddInMemoryApiResources(
-                    new List<ApiResource>{
-                        new ApiResource("api","Demo Api", new [] {
-                            JwtClaimTypes.Name, JwtClaimTypes.Role
-                        })
-                    })*/
-                .AddInMemoryApiScopes(new List<ApiScope>
-                    {
-                        // backward compat
-                        new ApiScope("api", "Api", new [] {
-                            JwtClaimTypes.Name, JwtClaimTypes.Role
-                        })
-                    })
+                .AddInMemoryClients(Config.GetClients())
+                .AddInMemoryApiScopes(Config.GetScopes())
                 .AddAspNetIdentity<IdentityUser>();
 
             services.AddControllersWithViews();
