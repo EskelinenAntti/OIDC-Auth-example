@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import "./App.css";
 import userManager from "./auth/userManager";
 import { Switch, Route, Redirect } from "react-router-dom";
 
